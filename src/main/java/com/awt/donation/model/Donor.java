@@ -1,34 +1,30 @@
 
 package com.awt.donation.model;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "donors")
 public class Donor {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private String email;
+
     private String phone;
+
     private String address;
-    private LocalDateTime createdAt;
+
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     public Donor() {
-    }
-
-    public Donor(
-            Long id,
-            String name,
-            String email,
-            String phone,
-            String address,
-            LocalDateTime createdAt) {
-
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
-        this.address = address;
-        this.createdAt = createdAt;
     }
 
     public Long getId() {
@@ -79,4 +75,3 @@ public class Donor {
         this.createdAt = createdAt;
     }
 }
-```
