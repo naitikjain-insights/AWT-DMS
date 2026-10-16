@@ -1,37 +1,33 @@
 
 package com.awt.donation.model;
 
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
+import java.time.LocalDate;
 
+@Entity
+@Table(name = "donations")
 public class Donation {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private Long donorId;
-    private double amount;
+
+    @Column(nullable = false)
+    private Double amount;
+
+    @Column(nullable = false)
     private String paymentMode;
+
     private String purpose;
+
     private String transactionId;
-    private LocalDateTime donationDate;
+
+    private LocalDate donationDate = LocalDate.now();
 
     public Donation() {
-    }
-
-    public Donation(
-            Long id,
-            Long donorId,
-            double amount,
-            String paymentMode,
-            String purpose,
-            String transactionId,
-            LocalDateTime donationDate) {
-
-        this.id = id;
-        this.donorId = donorId;
-        this.amount = amount;
-        this.paymentMode = paymentMode;
-        this.purpose = purpose;
-        this.transactionId = transactionId;
-        this.donationDate = donationDate;
     }
 
     public Long getId() {
@@ -50,11 +46,11 @@ public class Donation {
         this.donorId = donorId;
     }
 
-    public double getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
@@ -82,11 +78,11 @@ public class Donation {
         this.transactionId = transactionId;
     }
 
-    public LocalDateTime getDonationDate() {
+    public LocalDate getDonationDate() {
         return donationDate;
     }
 
-    public void setDonationDate(LocalDateTime donationDate) {
+    public void setDonationDate(LocalDate donationDate) {
         this.donationDate = donationDate;
     }
 }
