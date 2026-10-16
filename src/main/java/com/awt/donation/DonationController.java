@@ -33,6 +33,7 @@ public class DonationController {
         model.addAttribute("donors", donorRepository.findAll());
         model.addAttribute("totalAmount", donationRepository.getTotalAmount());
         model.addAttribute("donation", new Donation());
+        
         return "donations";
     }
 
