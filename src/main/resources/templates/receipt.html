@@ -1,0 +1,311 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donation Receipt | AWT</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px 16px;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f1f5f9;
+            color: #172b4d;
+        }
+
+        .receipt {
+            max-width: 760px;
+            margin: auto;
+            background: white;
+            border: 1px solid #dbe3ef;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 12px 35px rgba(23, 43, 77, 0.08);
+        }
+
+        .receipt-header {
+            background: #172b4d;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 34px;
+            color: #9db5ff;
+        }
+
+        .receipt-header h1 {
+            margin: 10px 0;
+            font-size: 28px;
+        }
+
+        .receipt-header p {
+            margin: 0;
+            color: #dce6ff;
+            line-height: 1.6;
+        }
+
+        .receipt-body {
+            padding: 30px;
+        }
+
+        .receipt-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .receipt-title h2 {
+            margin: 0;
+        }
+
+        .receipt-number {
+            color: #315efb;
+            font-weight: bold;
+        }
+
+        .amount-box {
+            margin: 24px 0;
+            padding: 22px;
+            border-radius: 12px;
+            background: #edf1ff;
+            text-align: center;
+        }
+
+        .amount-box p {
+            margin: 0 0 8px;
+            color: #68758a;
+        }
+
+        .amount {
+            font-size: 32px;
+            font-weight: bold;
+            color: #172b4d;
+        }
+
+        .details {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .detail {
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            overflow-wrap: anywhere;
+        }
+
+        .label {
+            display: block;
+            color: #68758a;
+            font-size: 12px;
+            margin-bottom: 7px;
+        }
+
+        .value {
+            font-weight: bold;
+            line-height: 1.5;
+        }
+
+        .thank-you {
+            padding: 18px;
+            background: #e0f3f0;
+            border-radius: 10px;
+            text-align: center;
+            line-height: 1.7;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        .button {
+            display: inline-block;
+            border: 0;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .primary {
+            background: #315efb;
+            color: white;
+        }
+
+        .secondary {
+            background: #e2e8f0;
+            color: #172b4d;
+        }
+
+        @media (max-width: 520px) {
+            body {
+                padding: 12px;
+            }
+
+            .receipt-header,
+            .receipt-body {
+                padding: 22px 18px;
+            }
+
+            .details {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .receipt-header h1 {
+                font-size: 24px;
+            }
+        }
+
+        @media print {
+            body {
+                padding: 0;
+                background: white;
+            }
+
+            .receipt {
+                max-width: none;
+                border: 0;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .actions {
+                display: none;
+            }
+
+            .receipt-header {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+
+            .amount-box,
+            .thank-you {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="receipt">
+    <header class="receipt-header">
+        <div class="logo" aria-hidden="true">♡</div>
+        <h1>AWT Donation Management</h1>
+        <p>Donation Receipt</p>
+        <p>Thank you for supporting our cause.</p>
+    </header>
+
+    <main class="receipt-body">
+        <div class="receipt-title">
+            <h2>Donation Confirmation</h2>
+            <span class="receipt-number">
+                Receipt #<span th:text="${donation.id}">1</span>
+            </span>
+        </div>
+
+        <section class="amount-box">
+            <p>Donation Amount</p>
+            <div class="amount">
+                ₹<span th:text="${#numbers.formatDecimal(donation.amount, 1, 2)}">0.00</span>
+            </div>
+        </section>
+
+        <section class="details">
+            <div class="detail">
+                <span class="label">Donor Name</span>
+                <span class="value" th:text="${donor.name}">Donor Name</span>
+            </div>
+
+            <div class="detail">
+                <span class="label">Email Address</span>
+                <span class="value" th:text="${donor.email}">donor@example.com</span>
+            </div>
+
+            <div class="detail">
+                <span class="label">Phone Number</span>
+                <span class="value" th:text="${donor.phone}">Phone</span>
+            </div>
+
+            <div class="detail">
+                <span class="label">Payment Mode</span>
+                <span class="value" th:text="${donation.paymentMode}">UPI</span>
+            </div>
+
+            <div class="detail">
+                <span class="label">Donation Purpose</span>
+                <span class="value"
+                      th:text="${donation.purpose != null and !donation.purpose.isBlank() ? donation.purpose : 'General Donation'}">
+                    General Donation
+                </span>
+            </div>
+
+            <div class="detail">
+                <span class="label">Transaction Reference</span>
+                <span class="value"
+                      th:text="${donation.transactionId != null and !donation.transactionId.isBlank() ? donation.transactionId : 'Not provided'}">
+                    Not provided
+                </span>
+            </div>
+
+            <div class="detail">
+                <span class="label">Donation Date</span>
+                <span class="value"
+                      th:text="${donation.donationDate != null ? #temporals.format(donation.donationDate, 'dd MMM yyyy, hh:mm a') : 'Not available'}">
+                    Donation Date
+                </span>
+            </div>
+
+            <div class="detail">
+                <span class="label">Donor Address</span>
+                <span class="value"
+                      th:text="${donor.address != null and !donor.address.isBlank() ? donor.address : 'Not provided'}">
+                    Address
+                </span>
+            </div>
+        </section>
+
+        <div class="thank-you">
+            <strong>Thank you for your generosity!</strong>
+            <p>Your contribution can help make a meaningful difference.</p>
+        </div>
+
+        <div class="actions">
+            <button class="button primary" onclick="window.print()">
+                Print / Save as PDF
+            </button>
+
+            <a class="button secondary" th:href="@{/donations}">
+                Back to Donations
+            </a>
+
+            <a class="button secondary" th:href="@{/}">
+                Dashboard
+            </a>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>
