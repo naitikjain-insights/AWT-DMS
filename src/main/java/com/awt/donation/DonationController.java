@@ -1,7 +1,9 @@
 
 package com.awt.donation;
 
+import com.awt.donation.model.Donation;
 import com.awt.donation.model.Donor;
+import com.awt.donation.repository.DonationRepository;
 import com.awt.donation.repository.DonorRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,48 +12,69 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-@Controller
-public class DonorController {
+import java.time.LocalDate;
 
+@Controller
+public class DonationController {
+
+    private final DonationRepository donationRepository;
     private final DonorRepository donorRepository;
 
-    public DonorController(DonorRepository donorRepository) {
+    public DonationController(
+            DonationRepository donationRepository,
+            DonorRepository donorRepository) {
+        this.donationRepository = donationRepository;
         this.donorRepository = donorRepository;
     }
 
-    @GetMapping("/donors")
-    public String showDonors(Model model) {
+    @GetMapping("/donations")
+    public String showDonations(Model model) {
+        model.addAttribute("donations", donationRepository.findAll());
         model.addAttribute("donors", donorRepository.findAll());
-        model.addAttribute("donor", new Donor());
-        return "donors";
+        model.addAttribute("totalAmount", donationRepository.getTotalAmount());
+        return "donations";
     }
 
-    @PostMapping("/donors/save")
-    public String saveDonor(
-            @RequestParam String name,
-            @RequestParam String email,
-            @RequestParam(required = false) String phone,
-            @RequestParam(required = false) String address,
+    @PostMapping("/donations/save")
+    public String saveDonation(
+            @RequestParam Long donorId,
+            @RequestParam Double amount,
+            @RequestParam String paymentMode,
+            @RequestParam(required = false) String purpose,
             RedirectAttributes redirectAttributes) {
 
-        if (name == null || name.isBlank()
-                || email == null || email.isBlank()) {
+        if (amount == null || amount <= 0) {
             redirectAttributes.addFlashAttribute(
-                    "errorMessage", "Name and email are required.");
-            return "redirect:/donors";
+                    "errorMessage", "Donation amount must be greater than zero.");
+            return "redirect:/donations";
         }
 
-        Donor donor = new Donor();
-        donor.setName(name.trim());
-        donor.setEmail(email.trim());
-        donor.setPhone(phone == null ? "" : phone.trim());
-        donor.setAddress(address == null ? "" : address.trim());
+        if (paymentMode == null || paymentMode.isBlank()) {
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage", "Please select a payment method.");
+            return "redirect:/donations";
+        }
 
-        donorRepository.save(donor);
+        Donor donor = donorRepository.findById(donorId).orElse(null);
+
+        if (donor == null) {
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage", "Please select a valid donor.");
+            return "redirect:/donations";
+        }
+
+        Donation donation = new Donation();
+        donation.setDonorId(donor.getId());
+        donation.setAmount(amount);
+        donation.setPaymentMode(paymentMode.trim());
+        donation.setPurpose(purpose == null ? "" : purpose.trim());
+        donation.setDonationDate(LocalDate.now());
+
+        donationRepository.save(donation);
 
         redirectAttributes.addFlashAttribute(
-                "successMessage", "Donor registered successfully!");
+                "successMessage", "Donation saved successfully!");
 
-        return "redirect:/donors";
+        return "redirect:/donations";
     }
 }
