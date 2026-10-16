@@ -4,16 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>AWT | Donation Management System</title>
 
     <style>
         :root {
-            --navy: #172b4d;
+            --navy: #142b4a;
             --blue: #315efb;
-            --bg: #f5f7fb;
+            --red: #8b1e2d;
+            --bg: #eaf0f6;
             --muted: #68758a;
             --white: #ffffff;
+            --mint: #e0f3f0;
         }
 
         * {
@@ -22,117 +23,153 @@
             padding: 0;
         }
 
-        html {
-            scroll-behavior: smooth;
-        }
-
         body {
             font-family: Arial, Helvetica, sans-serif;
             background: var(--bg);
             color: var(--navy);
+            line-height: 1.6;
         }
 
         header {
             background: var(--white);
-            border-bottom: 1px solid #e6eaf1;
-            padding: 18px 6%;
+            padding: 16px 6%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 18px;
             flex-wrap: wrap;
+            gap: 16px;
+            border-bottom: 1px solid #dce4ed;
         }
 
         .brand {
             display: flex;
             align-items: center;
             gap: 12px;
-            font-size: 19px;
             font-weight: 800;
+            font-size: 18px;
         }
 
         .logo {
-            display: grid;
-            place-items: center;
             width: 44px;
             height: 44px;
-            background: var(--blue);
+            display: grid;
+            place-items: center;
+            background: var(--red);
             color: white;
             border-radius: 12px;
-            font-size: 25px;
+            font-size: 24px;
         }
 
         nav {
             display: flex;
-            gap: 22px;
+            align-items: center;
             flex-wrap: wrap;
+            gap: 20px;
         }
 
         nav a {
-            color: var(--muted);
             text-decoration: none;
+            color: var(--navy);
             font-size: 14px;
-            transition: color 0.2s ease;
+            font-weight: 600;
         }
 
         nav a:hover {
-            color: var(--blue);
+            color: var(--red);
         }
 
         main {
             max-width: 1180px;
             margin: auto;
-            padding: 44px 24px;
+            padding: 36px 22px 50px;
         }
 
         .hero {
-            background: linear-gradient(120deg, #172b4d, #315efb);
+            background: linear-gradient(120deg, #142b4a, #294d78);
             color: white;
             padding: 48px;
-            border-radius: 24px;
+            border-radius: 22px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            gap: 30px;
+            align-items: center;
             flex-wrap: wrap;
+            gap: 28px;
+            box-shadow: 0 12px 32px #142b4a20;
         }
 
         .hero-content {
-            max-width: 650px;
+            max-width: 680px;
         }
 
         .eyebrow {
+            color: #c7d9f3;
+            text-transform: uppercase;
             font-size: 12px;
             font-weight: bold;
             letter-spacing: 2px;
-            text-transform: uppercase;
-            color: #c6d5ff;
         }
 
         h1 {
             font-size: clamp(30px, 5vw, 46px);
-            line-height: 1.15;
-            margin: 16px 0;
+            line-height: 1.2;
+            margin: 14px 0;
         }
 
         .hero p {
-            color: #e0e8ff;
-            line-height: 1.7;
-            max-width: 560px;
+            color: #e0e9f5;
+            max-width: 580px;
+            font-size: 15px;
         }
 
         .hero-icon {
-            font-size: 90px;
-            opacity: 0.95;
+            font-size: 86px;
+            line-height: 1;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 18px;
+            background: var(--red);
+            color: white;
+            text-decoration: none;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: bold;
+            border: 2px solid var(--red);
+            transition: 0.2s ease;
+        }
+
+        .button:hover {
+            background: #6f1724;
+            border-color: #6f1724;
+            transform: translateY(-2px);
+        }
+
+        .button-light {
+            background: transparent;
+            border-color: #d8e5f5;
+            color: white;
+        }
+
+        .button-light:hover {
+            background: #ffffff18;
+            border-color: white;
         }
 
         .section-heading {
-            margin: 38px 0 20px;
+            margin: 36px 0 20px;
         }
 
         .section-heading h2 {
-            font-size: 24px;
-            margin-bottom: 8px;
+            font-size: 25px;
+            margin-bottom: 5px;
         }
 
         .section-heading p {
@@ -147,82 +184,78 @@
         }
 
         .card {
-            background: var(--white);
-            padding: 25px;
-            border-radius: 18px;
-            border: 1px solid #e9edf4;
-            box-shadow: 0 8px 24px rgba(20, 40, 80, 0.035);
+            background: white;
+            border: 1px solid #dfe7ef;
+            padding: 26px;
+            border-radius: 17px;
+            box-shadow: 0 6px 22px #142b4a08;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 14px 30px rgba(20, 40, 80, 0.08);
+            box-shadow: 0 12px 28px #142b4a15;
         }
 
         .card-icon {
-            width: 48px;
-            height: 48px;
+            width: 52px;
+            height: 52px;
             display: grid;
             place-items: center;
-            background: #edf1ff;
             border-radius: 14px;
-            font-size: 23px;
-            margin-bottom: 20px;
+            background: var(--mint);
+            font-size: 25px;
+            margin-bottom: 18px;
+        }
+
+        .card:nth-child(2) .card-icon {
+            background: #f8e8eb;
+        }
+
+        .card:nth-child(3) .card-icon {
+            background: #eaf0ff;
         }
 
         .card h3 {
-            font-size: 18px;
-            margin-bottom: 10px;
+            font-size: 19px;
+            margin-bottom: 8px;
         }
 
         .card p {
             color: var(--muted);
             font-size: 14px;
-            line-height: 1.65;
-            min-height: 46px;
             margin-bottom: 20px;
-        }
-
-        .button {
-            display: inline-block;
-            padding: 12px 16px;
-            background: var(--blue);
-            color: white;
-            text-decoration: none;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: bold;
-            transition: background 0.2s ease;
-        }
-
-        .button:hover {
-            background: #2449d8;
+            flex-grow: 1;
         }
 
         .notice {
-            margin-top: 28px;
-            padding: 20px;
-            background: var(--white);
-            border: 1px solid #e9edf4;
-            border-radius: 14px;
-            color: var(--muted);
-            line-height: 1.7;
-            font-size: 14px;
+            margin-top: 25px;
+            padding: 22px;
+            background: white;
+            border: 1px solid #dfe7ef;
+            border-left: 5px solid var(--red);
+            border-radius: 12px;
         }
 
-        .notice strong {
-            display: block;
-            color: var(--navy);
-            margin-bottom: 8px;
-            font-size: 16px;
+        .notice h3 {
+            margin-bottom: 5px;
+        }
+
+        .notice p {
+            color: var(--muted);
+            font-size: 14px;
         }
 
         footer {
             text-align: center;
-            padding: 28px 18px;
+            padding: 25px 18px;
             color: var(--muted);
             font-size: 13px;
+            border-top: 1px solid #dce4ed;
+            background: white;
         }
 
         a:focus-visible {
@@ -230,6 +263,142 @@
             outline-offset: 3px;
         }
 
-        @media (max-width: 900px) {
+        @media (max-width: 850px) {
             .cards {
-                grid-template-columns: repeat(2, min
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .hero {
+                padding: 35px;
+            }
+
+            .hero-icon {
+                font-size: 60px;
+            }
+        }
+
+        @media (max-width: 560px) {
+            header {
+                padding: 14px 5%;
+            }
+
+            .brand {
+                font-size: 16px;
+            }
+
+            nav {
+                gap: 14px;
+            }
+
+            main {
+                padding: 24px 15px 35px;
+            }
+
+            .hero {
+                padding: 27px 22px;
+                border-radius: 16px;
+            }
+
+            .hero-icon {
+                display: none;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .section-heading h2 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <div class="brand">
+        <div class="logo">♥</div>
+        <span>AWT Donation Management</span>
+    </div>
+
+    <nav>
+        <a th:href="@{/}">Dashboard</a>
+        <a th:href="@{/donors}">Donors</a>
+        <a th:href="@{/donations}">Donations</a>
+    </nav>
+</header>
+
+<main>
+    <section class="hero">
+        <div class="hero-content">
+            <div class="eyebrow">Donation Management System</div>
+            <h1>Every Donation Makes a Difference.</h1>
+            <p>
+                Welcome to AWT Donation Management System.
+                Manage donor information, record contributions and
+                keep your donation records organized in one place.
+            </p>
+
+            <div class="hero-actions">
+                <a class="button" th:href="@{/donors}">Manage Donors →</a>
+                <a class="button button-light" th:href="@{/donations}">
+                    View Donations
+                </a>
+            </div>
+        </div>
+
+        <div class="hero-icon" aria-hidden="true">♥</div>
+    </section>
+
+    <section class="section-heading">
+        <h2>Quick Access</h2>
+        <p>Choose a section to manage your donation records.</p>
+    </section>
+
+    <section class="cards">
+        <article class="card">
+            <div class="card-icon" aria-hidden="true">👥</div>
+            <h3>Donor Management</h3>
+            <p>
+                View and manage donor information in one place.
+                Add donor details and keep your records organized.
+            </p>
+            <a class="button" th:href="@{/donors}">Open Donors →</a>
+        </article>
+
+        <article class="card">
+            <div class="card-icon" aria-hidden="true">♥</div>
+            <h3>Donation Records</h3>
+            <p>
+                Record donations, select a donor, enter the amount
+                and payment mode, and review donation history.
+            </p>
+            <a class="button" th:href="@{/donations}">Open Donations →</a>
+        </article>
+
+        <article class="card">
+            <div class="card-icon" aria-hidden="true">📋</div>
+            <h3>Record Keeping</h3>
+            <p>
+                Keep donor and donation details accessible through
+                the dedicated management pages.
+            </p>
+            <a class="button" th:href="@{/donations}">View Records →</a>
+        </article>
+    </section>
+
+    <section class="notice">
+        <h3>Welcome to your dashboard</h3>
+        <p>
+            Use the navigation links above or the cards to open each section.
+            To record a donation, add a donor first and then select that donor
+            on the Donations page.
+        </p>
+    </section>
+</main>
+
+<footer>
+    © 2026 AWT Donation Management System. All rights reserved.
+</footer>
+</body>
+</html>
