@@ -47,8 +47,10 @@
 </header>
 
 <main>
-    <div th:if="${success}" class="message success" th:text="${success}"></div>
-    <div th:if="${error}" class="message error" th:text="${error}"></div>
+    <div th:if="${successMessage}" class="message success"
+     th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="message error"
+     th:text="${errorMessage}"></div>
 
     <section class="card">
         <h2>Donation Overview</h2>
@@ -120,8 +122,8 @@
                     <td>₹<span th:text="${#numbers.formatDecimal(item.amount, 1, 2)}"></span></td>
                     <td th:text="${item.paymentMode}"></td>
                     <td th:text="${item.purpose}"></td>
-                    <td th:text="${item.donationDate != null ? #temporals.format(item.donationDate, 'dd MMM yyyy, hh:mm a') : '-'}"></td>
-                </tr>
+                    <td th:text="${item.donationDate != null ? #temporals.format(item.donationDate, 'dd MMM yyyy') : '-'}"></td>             
+                    </tr>
                 <tr th:if="${#lists.isEmpty(donations)}">
                     <td colspan="6">No donations recorded yet.</td>
                 </tr>
