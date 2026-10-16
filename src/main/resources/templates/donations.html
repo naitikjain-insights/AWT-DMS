@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donations | AWT Donation Management</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: Arial, sans-serif; background: #f1f5f9; color: #172554; }
+        header {
+            background: #142b4a; color: white; padding: 20px 6%;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 12px;
+        }
+        header a { color: white; text-decoration: none; }
+        main { max-width: 1100px; margin: 35px auto; padding: 0 18px; }
+        .card {
+            background: white; padding: 25px; border-radius: 14px;
+            margin-bottom: 25px; box-shadow: 0 5px 20px #142b4a12;
+        }
+        .total { background: #e0f3f0; padding: 18px; border-radius: 10px; margin-bottom: 20px; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+        label { display: block; margin-bottom: 7px; font-weight: bold; }
+        input, select {
+            width: 100%; padding: 12px; border: 1px solid #cbd5e1;
+            border-radius: 8px; font: inherit; background: white;
+        }
+        button {
+            background: #8b1e2d; color: white; border: 0;
+            padding: 12px 22px; border-radius: 8px; cursor: pointer; margin-top: 18px;
+        }
+        .message { padding: 12px; border-radius: 8px; margin-bottom: 15px; }
+        .success { background: #dcfce7; color: #166534; }
+        .error { background: #fee2e2; color: #991b1b; }
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 650px; }
+        th, td { text-align: left; padding: 13px; border-bottom: 1px solid #e2e8f0; }
+        th { background: #eaf0f6; }
+        .back { color: #142b4a; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+<header>
+    <h2>AWT | Donation Records</h2>
+    <a th:href="@{/}">← Dashboard</a>
+</header>
+
+<main>
+    <div th:if="${success}" class="message success" th:text="${success}"></div>
+    <div th:if="${error}" class="message error" th:text="${error}"></div>
+
+    <section class="card">
+        <h2>Donation Overview</h2>
+        <div class="total">
+            <strong>Total recorded donations:</strong>
+            ₹<span th:text="${#numbers.formatDecimal(totalAmount, 1, 2)}">0.00</span>
+        </div>
+
+        <h2>Record a Donation</h2>
+        <form th:action="@{/donations/save}" th:object="${donation}" method="post">
+            <div class="form-grid">
+                <div>
+                    <label for="donorId">Select Donor *</label>
+                    <select id="donorId" th:field="*{donorId}" required>
+                        <option value="">Choose a donor</option>
+                        <option th:each="donor : ${donors}"
+                                th:value="${donor.id}"
+                                th:text="${donor.name + ' (' + donor.email + ')'}"></option>
+                    </select>
+                    <small>Add a donor first if the list is empty.</small>
+                </div>
+                <div>
+                    <label for="amount">Amount (INR) *</label>
+                    <input id="amount" type="number" th:field="*{amount}" min="1" step="0.01" required>
+                </div>
+                <div>
+                    <label for="paymentMode">Payment Mode *</label>
+                    <select id="paymentMode" th:field="*{paymentMode}" required>
+                        <option value="">Choose payment mode</option>
+                        <option value="Cash">Cash</option>
+                        <option value="UPI">UPI</option>
+                        <option value="Card">Card</option>
+                        <option value="Bank Transfer">Bank Transfer</option>
+                        <option value="Cheque">Cheque</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="purpose">Donation Purpose</label>
+                    <input id="purpose" type="text" th:field="*{purpose}" maxlength="200"
+                           placeholder="e.g. Education, Medical aid">
+                </div>
+                <div>
+                    <label for="transactionId">Transaction Reference</label>
+                    <input id="transactionId" type="text" th:field="*{transactionId}" maxlength="100">
+                </div>
+            </div>
+            <button type="submit">Save Donation</button>
+        </form>
+    </section>
+
+    <section class="card">
+        <h2>Donation History</h2>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Donor ID</th>
+                    <th>Amount</th>
+                    <th>Payment</th>
+                    <th>Purpose</th>
+                    <th>Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${donations}">
+                    <td th:text="${item.id}"></td>
+                    <td th:text="${item.donorId}"></td>
+                    <td>₹<span th:text="${#numbers.formatDecimal(item.amount, 1, 2)}"></span></td>
+                    <td th:text="${item.paymentMode}"></td>
+                    <td th:text="${item.purpose}"></td>
+                    <td th:text="${item.donationDate != null ? #temporals.format(item.donationDate, 'dd MMM yyyy, hh:mm a') : '-'}"></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(donations)}">
+                    <td colspan="6">No donations recorded yet.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <a class="back" th:href="@{/}">Back to Dashboard</a>
+</main>
+</body>
+</html>
