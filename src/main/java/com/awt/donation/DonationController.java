@@ -1,68 +1,57 @@
 
 package com.awt.donation;
 
-import com.awt.donation.model.Donation;
-import com.awt.donation.repository.DonationRepository;
+import com.awt.donation.model.Donor;
 import com.awt.donation.repository.DonorRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalDateTime;
-
 @Controller
-public class DonationController {
+public class DonorController {
 
-    private final DonationRepository donationRepository;
     private final DonorRepository donorRepository;
 
-    public DonationController(
-            DonationRepository donationRepository,
-            DonorRepository donorRepository) {
-        this.donationRepository = donationRepository;
+    public DonorController(DonorRepository donorRepository) {
         this.donorRepository = donorRepository;
     }
 
-    @GetMapping("/donations")
-    public String donations(Model model) {
-        model.addAttribute("donations", donationRepository.findAll());
+    @GetMapping("/donors")
+    public String showDonors(Model model) {
         model.addAttribute("donors", donorRepository.findAll());
-        model.addAttribute("donation", new Donation());
-        model.addAttribute(
-                "totalAmount", donationRepository.getTotalAmount());
-        return "donations";
+        model.addAttribute("donor", new Donor());
+        return "donors";
     }
 
-    @PostMapping("/donations/save")
-    public String saveDonation(
-            @ModelAttribute Donation donation,
+    @PostMapping("/donors/save")
+    public String saveDonor(
+            @RequestParam String name,
+            @RequestParam String email,
+            @RequestParam(required = false) String phone,
+            @RequestParam(required = false) String address,
             RedirectAttributes redirectAttributes) {
 
-        if (donation.getDonorId() == null
-                || donation.getAmount() <= 0
-                || donation.getPaymentMode() == null
-                || donation.getPaymentMode().isBlank()) {
-
+        if (name == null || name.isBlank()
+                || email == null || email.isBlank()) {
             redirectAttributes.addFlashAttribute(
-                    "error", "Please enter valid donation details.");
-            return "redirect:/donations";
+                    "errorMessage", "Name and email are required.");
+            return "redirect:/donors";
         }
 
-        if (donorRepository.findById(donation.getDonorId()).isEmpty()) {
-            redirectAttributes.addFlashAttribute(
-                    "error", "Please select a valid donor first.");
-            return "redirect:/donations";
-        }
+        Donor donor = new Donor();
+        donor.setName(name.trim());
+        donor.setEmail(email.trim());
+        donor.setPhone(phone == null ? "" : phone.trim());
+        donor.setAddress(address == null ? "" : address.trim());
 
-        donation.setDonationDate(LocalDateTime.now());
-        donationRepository.save(donation);
+        donorRepository.save(donor);
 
         redirectAttributes.addFlashAttribute(
-                "success", "Donation recorded successfully!");
+                "successMessage", "Donor registered successfully!");
 
-        return "redirect:/donations";
+        return "redirect:/donors";
     }
 }
